@@ -4,7 +4,21 @@ import Filter from "./Filter";
 import ContactList from "./ContactList";
 import Section from "./Section";
 
+import { useSelector, useDispatch } from "react-redux";
+import { addContact, deleteContact } from "../redux/store";
+
 const App = () => {
+  // -------------------------------
+  const dispatch = useDispatch();
+  const contactsA = useSelector((state) => state.items);
+  console.log(contactsA);
+  // const filteredA = (() => {
+  //   const value = filter.toLowerCase();
+  //   return contacts.filter((contact) =>
+  //     contact.name.toLowerCase().includes(value)
+  //   );
+  // })();
+  // ---------------------------------
   const [contacts, setContacts] = useState(
     () => JSON.parse(window.localStorage.getItem("contacts")) ?? []
   );
@@ -21,16 +35,16 @@ const App = () => {
     );
   })();
 
-  const addContact = (id, name, number) => {
-    const value = name.toLowerCase();
-    contacts.filter((contact) => contact.name.toLowerCase() === value)
-      .length === 0
-      ? setContacts((prevState) => [
-          ...prevState,
-          { id: id, name: name, number: number },
-        ])
-      : alert(`${name} is already in contacts.`);
-  };
+  // const addContact = (id, name, number) => {
+  //   const value = name.toLowerCase();
+  //   contacts.filter((contact) => contact.name.toLowerCase() === value)
+  //     .length === 0
+  //     ? setContacts((prevState) => [
+  //         ...prevState,
+  //         { id: id, name: name, number: number },
+  //       ])
+  //     : alert(`${name} is already in contacts.`);
+  // };
 
   const deleteContact = (event) => {
     const { name } = event.target;
@@ -45,7 +59,8 @@ const App = () => {
   return (
     <>
       <Section title={"Phonebook"}>
-        <ContactForm onSubmit={addContact} />
+        {/* <ContactForm onSubmit={addContact} /> */}
+        <ContactForm onSubmit={() => dispatch(addContact("mark"))} />
       </Section>
       <Section title={"Contacts"}>
         <Filter filter={filter} onChange={handlleFilterContactsByName} />
