@@ -1,4 +1,15 @@
 import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 export const addContact = createAction("contacts/addContact");
 export const removeContact = createAction("contacts/removeContact");
@@ -21,8 +32,25 @@ const reducerContacts = createReducer(
   }
 );
 
-export const store = configureStore({
+const persistContactsConfig = {
+  key: "items",
+  storage,
+  whitelist: ["items"],
+};
+
+const store = configureStore({
   reducer: {
-    contacts: reducerContacts,
+    contacts: persistReducer(persistContactsConfig, reducerContacts),
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(),
+  devTools: process.env.NODE_ENV !== "production",
 });
+
+const persistor = persistStore(store);
+
+export { store, persistor };

@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import {
   StyledLabel,
   StyledInput,
@@ -6,7 +5,17 @@ import {
   StyledForm,
 } from "./Filter.styled";
 
-const Filter = ({ filter, onChange }) => {
+import { useSelector, useDispatch } from "react-redux";
+import { handlerFilter } from "../../redux/store";
+
+const Filter = () => {
+  const filter = useSelector((state) => state.contacts.filter);
+  const dispatch = useDispatch();
+
+  const onChange = (e) => {
+    dispatch(handlerFilter(e.currentTarget.value));
+  };
+
   return (
     <StyledForm>
       <StyledLabel>
@@ -18,8 +27,3 @@ const Filter = ({ filter, onChange }) => {
 };
 
 export default Filter;
-
-Filter.propTypes = {
-  filter: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-};

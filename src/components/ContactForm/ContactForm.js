@@ -1,6 +1,3 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
-import { nanoid } from "nanoid";
 import {
   StyledForm,
   StyledLabel,
@@ -9,9 +6,21 @@ import {
   StyledButton,
 } from "./ContactForm.styled";
 
-const ContactForm = ({ onSubmit }) => {
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addContact } from "../../redux/store";
+import { nanoid } from "nanoid";
+import * as storage from "../../services/LocalStorage";
+
+const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector((state) => state.contacts.items);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+
+  useEffect(() => {
+    storage.save("contacts", contacts);
+  }, [contacts]);
 
   const reset = () => {
     setName("");
@@ -19,24 +28,26 @@ const ContactForm = ({ onSubmit }) => {
   };
 
   const handlleChange = (event) => {
-    const { name, value } = event.target;
-
-    switch (name) {
+    switch (event.target.name) {
       case "name":
-        setName(value);
+        setName(event.currentTarget.value);
         break;
+
       case "number":
-        setNumber(value);
+        setNumber(event.currentTarget.value);
         break;
+
       default:
-        break;
+        return;
     }
   };
 
   const handlleSubmit = (event) => {
     event.preventDefault();
     const id = nanoid();
-    onSubmit(id, name, number);
+    dispatch(addContact({ id: id, name: name, phone: number }));
+    setName("");
+    setNumber("");
     reset();
   };
 
@@ -74,7 +85,3 @@ const ContactForm = ({ onSubmit }) => {
 };
 
 export default ContactForm;
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};

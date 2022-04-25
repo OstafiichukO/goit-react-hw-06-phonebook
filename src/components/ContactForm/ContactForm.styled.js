@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const StyledForm = styled.form`
   display: flex;
@@ -45,8 +45,7 @@ export const StyledButton = styled.button`
   background-color: #4d7aff;
   border: none;
   cursor: pointer;
-  &:hover,
-  &:focus {
+  &:hover {
     background-color: #5bda52;
     color: black;
   }
