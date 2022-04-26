@@ -5,6 +5,7 @@ import {
   StyledInput,
   StyledButton,
 } from "./ContactForm.styled";
+import Notiflix from "notiflix";
 
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +28,23 @@ const ContactForm = () => {
     setNumber("");
   };
 
+  const duplicateCheck = () => {
+    const duplicateName = contacts.reduce(
+      (acc, contact) => [...acc, contact.name],
+      []
+    );
+    // const duplicateNumber = contacts.reduce(
+    //   (acc, contact) => [...acc, contact.number],
+    //   []
+    // );
+    if (duplicateName.includes(name)) {
+      Notiflix.Notify.info(`${name} is already in contacts`);
+    }
+    // if (name === "" || number === "") {
+    //   alert("Enter all data, please");
+    // }
+  };
+
   const handlleChange = (event) => {
     switch (event.target.name) {
       case "name":
@@ -45,10 +63,11 @@ const ContactForm = () => {
   const handlleSubmit = (event) => {
     event.preventDefault();
     const id = nanoid();
-    dispatch(addContact({ id: id, name: name, phone: number }));
-    setName("");
-    setNumber("");
     reset();
+    if (duplicateCheck()) {
+      return;
+    }
+    dispatch(addContact({ id: id, name: name, phone: number }));
   };
 
   return (

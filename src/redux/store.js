@@ -21,14 +21,14 @@ const reducerContacts = createReducer(
     filter: "",
   },
   {
-    [addContact]: (state, action) => void state.items.push(action.payload),
-    [removeContact]: (state, action) => {
-      const contactsList = state.items.filter(
-        (item) => item.id !== action.payload
-      );
+    [addContact]: (state, { payload }) => {
+      void state.items.push(payload);
+    },
+    [removeContact]: (state, { payload }) => {
+      const contactsList = state.items.filter(({ id }) => id !== payload);
       state.items = contactsList;
     },
-    [handlerFilter]: (state, action) => void (state.filter = action.payload),
+    [handlerFilter]: (state, { payload }) => void (state.filter = payload),
   }
 );
 
