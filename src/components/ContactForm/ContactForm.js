@@ -28,23 +28,6 @@ const ContactForm = () => {
     setNumber("");
   };
 
-  const duplicateCheck = () => {
-    const duplicateName = contacts.reduce(
-      (acc, contact) => [...acc, contact.name],
-      []
-    );
-    // const duplicateNumber = contacts.reduce(
-    //   (acc, contact) => [...acc, contact.number],
-    //   []
-    // );
-    if (duplicateName.includes(name)) {
-      Notiflix.Notify.info(`${name} is already in contacts`);
-    }
-    // if (name === "" || number === "") {
-    //   alert("Enter all data, please");
-    // }
-  };
-
   const handlleChange = (event) => {
     switch (event.target.name) {
       case "name":
@@ -63,11 +46,14 @@ const ContactForm = () => {
   const handlleSubmit = (event) => {
     event.preventDefault();
     const id = nanoid();
+    const duplicateName = contacts.reduce(
+      (acc, contact) => [...acc, contact.name],
+      []
+    );
+    duplicateName.includes(name)
+      ? Notiflix.Notify.info(`${name} is already in contacts`)
+      : dispatch(addContact({ id: id, name: name, phone: number }));
     reset();
-    if (duplicateCheck()) {
-      return;
-    }
-    dispatch(addContact({ id: id, name: name, phone: number }));
   };
 
   return (
